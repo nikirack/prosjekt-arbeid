@@ -10,7 +10,7 @@ const cors = require("cors");
 app.use(cors());
 
 app.get("/api/ovelser", (req, res) => {
-    const rows = db.prepare("SELECT id, navn FROM øvelse").all();
+    const rows = db.prepare("SELECT id, navn FROM ovelse").all();
     res.json(rows);
 });
 
