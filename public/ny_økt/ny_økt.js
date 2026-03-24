@@ -2,6 +2,8 @@ const form = document.querySelector("#økt")
 const ny_øvelse_knapp = document.querySelector("#ny_øvelse")
 const øvelser_div = document.querySelector("#øvelser")
 
+document.querySelector("#dato").valueAsDate = new Date();
+
 let alleØvelser = []
 
 async function øvelser() {
@@ -91,8 +93,13 @@ function oppdaterSettNummer(container) {
     })
 }
 
-form.addEventListener("submit", function(event) {
+form.addEventListener("submit", async function(event) {
     event.preventDefault()
+
+    const dato = document.querySelector("#dato").value
+    console.log(dato)
+
+
 
     const øvelser = øvelser_div.querySelectorAll(".øvelse")
     for (let div of øvelser) {
@@ -114,6 +121,28 @@ form.addEventListener("submit", function(event) {
         })
         return { navn, sett: settData }
     })
+    
+    let treningsøkt = {
+        "brukernavn":"nikolai",
+        "dato":dato,
+        "start":"start",
+        "slutt":"slutt",
+        "ovelser": økter
+    }
 
-    console.log("Økt-data:", økter)
+    console.log("Treningsøkt:", treningsøkt)
+
+    const response = await fetch('/api/registrer_okt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(treningsøkt)
+    });
+
+    if (response.ok) {
+        alert('Treningsøkten er registrert!');
+    } else {
+        alert('Det skjedde en feil ved registrering av treningsøkten.');
+    }
 })
