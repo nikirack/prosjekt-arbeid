@@ -2,6 +2,8 @@ const form = document.querySelector("#økt")
 const ny_øvelse_knapp = document.querySelector("#ny_øvelse")
 const øvelser_div = document.querySelector("#øvelser")
 
+const brukernavn = "nikolai"
+
 document.querySelector("#dato").valueAsDate = new Date();
 
 let alleØvelser = []
@@ -26,9 +28,11 @@ function leggTilØvelse() {
 
     div.innerHTML = `
         <h2>Øvelse ${count + 1}</h2>
-        <input type="text" list="${datalistId}" class="øvelse-input" placeholder="Søk øvelse..." required>
-        <datalist id="${datalistId}"></datalist>
-        <button type="button" class="slett-øvelse">Slett øvelse</button>
+        <div class="øvelse-input-row">
+            <input type="text" list="${datalistId}" class="øvelse-input" placeholder="Søk øvelse..." required>
+            <datalist id="${datalistId}"></datalist>
+            <button type="button" class="slett-øvelse">Slett</button>
+        </div>
         <div class="sett-container"></div>
         <button type="button" class="legg-til-sett">Legg til sett</button>
     `
@@ -64,9 +68,11 @@ function leggTilSett(container) {
     settDiv.classList.add("sett")
     settDiv.innerHTML = `
         <h4>Sett ${settNr}</h4>
-        <label>Reps: <input type="number" name="reps" value="6" min="1"></label>
-        <label>Vekt (kg): <input type="number" name="vekt" value="" min="0"></label>
-        <button type="button" class="slett-sett">Slett sett</button>
+        <div class="sett-inputs">
+            <input type="number" name="reps" value="6" min="1" placeholder="Reps">
+            <input type="number" name="vekt" value="" min="0" placeholder="Vekt (kg)">
+        </div>
+        <button type="button" class="slett-sett">Slett</button>
     `
     container.appendChild(settDiv)
 
@@ -123,7 +129,7 @@ form.addEventListener("submit", async function(event) {
     })
     
     let treningsøkt = {
-        "brukernavn":"nikolai",
+        "brukernavn":brukernavn,
         "dato":dato,
         "start":null,
         "slutt":null,

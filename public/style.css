@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+    --bg-primary: #c8c9c5;
+    --bg-secondary: #a8a9a5;
+    --bg-tertiary: #888985;
+    --text-primary: #1c1c1c;
+    --text-secondary: #4a4a4a;
+    --text-muted: #6a6a6a;
+    --accent: #1b5710;
+    --accent-light: #5a8f4d;
+    --accent-lime: #8cb369;
+    --border-color: #2a2a2a;
+    --border-width: 2px;
+    --border-thin: 1px;
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2.5rem;
+    --space-xl: 4rem;
+    --font-mono: 'Space Mono', monospace;
+    --font-display: 'Space Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-mono);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    background: 
+        linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+    line-height: 1.5;
+    min-height: 100vh;
+    background-size: 20px 20px;
+    overflow-x: hidden;
+    padding-top: 48px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: var(--border-width) solid var(--accent);
+    z-index: 1000;
+}
+
+nav a {
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: var(--space-xs) var(--space-sm);
+    border: var(--border-thin) solid transparent;
+    transition: all 0.1s ease;
+}
+
+nav a:hover {
+    background: var(--accent);
+    border-color: var(--accent-lime);
+    color: var(--bg-primary);
+}
+
+main {
+    position: relative;
+    padding: var(--space-xl) var(--space-md);
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    margin-bottom: var(--space-md);
+    position: relative;
+    display: inline-block;
+}
+
+h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+}
+
+h3, h4 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: all 0.15s ease;
+}
+
+a:hover {
+    background: var(--text-primary);
+    text-decoration: none;
+}
+
+.btn {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: var(--border-width) solid var(--text-primary);
+    transition: all 0.1s ease;
+    position: relative;
+}
+
+.btn:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent-light);
+    transform: translate(-2px, -2px);
+    box-shadow: 3px 3px 0 var(--text-primary);
+}
+
+.btn:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+input, select, textarea {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    background: var(--bg-primary);
+    border: var(--border-width) solid var(--border-color);
+    color: var(--text-primary);
+    width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-primary);
+}
+
+label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+}
+
+fieldset {
+    border: var(--border-width) solid var(--border-color);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    background: var(--bg-secondary);
+}
+
+legend {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0 var(--space-xs);
+    background: var(--bg-secondary);
+    border: var(--border-thin) solid var(--border-color);
+}
+
+.card {
+    border: var(--border-width) solid var(--border-color);
+    padding: var(--space-md);
+    background: var(--bg-primary);
+    transition: all 0.15s ease;
+}
+
+.card:hover {
+    background: var(--bg-secondary);
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.divider {
+    height: var(--border-width);
+    background: var(--border-color);
+    margin: var(--space-md) 0;
+}
+
+.grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin-top: var(--space-md);
+}
+
+@media (max-width: 768px) {
+    :root {
+        --space-md: 1rem;
+        --space-lg: 2rem;
+        --space-xl: 3rem;
+    }
+
+    body {
+        padding-top: 52px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        padding: 10px var(--space-sm);
+        gap: var(--space-xs);
+    }
+
+    nav a {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
+
+    main {
+        padding: var(--space-lg) var(--space-sm);
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--bg-primary);
+}

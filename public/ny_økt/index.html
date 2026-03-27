@@ -1,21 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ny økt</title>
+    <title>Ny økt - Treningslogg</title>
     <script src="ny_økt.js" defer></script>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="ny_økt.css">
 </head>
 <body>
-    
+    <nav>
+        <a href="/">HJEM</a>
+    </nav>
     <main>
+        <header>
+            <h1>REGISTER NY ØKT</h1>
+            <p>FYLL INN DETALJER</p>
+        </header>
+
         <form id="økt">
-            <h1>Registrer ny økt</h1>
-            <input type="date" id="dato">
+            <div class="divider"></div>
+            
+            <div class="form-group">
+                <label for="dato">Dato</label>
+                <input type="date" id="dato">
+            </div>
+
+            <h2>Øvelser</h2>
             <div id="øvelser"></div>
-            <button type="button" id="ny_øvelse">Ny øvelse</button>
-            <button type="submit" id="submit">Submit</button>
+
+            <button type="button" id="ny_øvelse" class="btn">
+                + Ny øvelse
+            </button>
+
+            <div class="divider"></div>
+
+            <button type="submit" id="submit" class="btn">
+                Submit økt
+            </button>
         </form>
+
+        <footer>
+            <p>END // Treningslogg</p>
+        </footer>
     </main>
 </body>
 </html>

@@ -14,7 +14,19 @@ app.get("/api/ovelser", (req, res) => {
     res.json(rows);
 });
 
-app.get("/api/okter/:brukernavn/:antall", (req, res) => {
+app.get("/api/:brukernavn/antal_okter", (req, res) => {
+    const { brukernavn } = req.params;
+
+    const bruker = db.prepare("SELECT id FROM bruker WHERE brukernavn = ?").get(brukernavn);
+    if (!bruker) {
+        return res.status(404).json({ error: "Bruker ikke funnet" });
+    }
+
+    const rows = db.prepare("SELECT COUNT(*) as antall_okter FROM treningsokt WHERE bruker_id = ?").get(bruker.id);
+    res.json(rows);
+});
+
+app.get("/api/:brukernavn/okter/:antall", (req, res) => {
     const { brukernavn, antall } = req.params;
 
     try {

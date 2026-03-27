@@ -5,14 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Treningslogg</title>
     <script src="script.js" defer></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="home.css">
 </head>
 <body>
     <nav>
-        <a href=".">Hjem</a>
+        <a href=".">HJEM</a>
     </nav>
     <main>
-        <a href="ny_økt">Ny økt</a>
+        <header>
+            <h1>TRENING</h1>
+            <p>LOGG DINE ØKTER</p>
+        </header>
+
+        <div class="divider"></div>
+
+        <section>
+            <h2>Hva nå?</h2>
+            <div class="grid">
+                <a href="ny_økt" class="card card-link">
+                    <h3>Ny økt</h3>
+                    <p>Registrer en ny treningsokt med ovelser og sett.</p>
+                    <span class="btn">Start</span>
+                </a>
+                <a href="#" class="card card-link">
+                    <h3>Historikk</h3>
+                    <p>Se dine tidligere okter og fremgang.</p>
+                    <button class="btn" disabled>Gå til</button>
+                </a>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section>
+            <h2>Stats</h2>
+            <div class="grid stats-grid">
+                <div class="card stats-card">
+                    <span>TOTAL</span>
+                    <div class="stat-value" id="total-økter">...</div>
+                    <div class="stat-label">Økter</div>
+                </div>
+                <div class="card stats-card accent">
+                    <span>ØKTER DENNE UKEN</span>
+                    <div class="stat-value">...</div>
+                    <div class="stat-label">Dager</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>END // Treningslogg</p>
+        </footer>
     </main>
 </body>
 </html>
