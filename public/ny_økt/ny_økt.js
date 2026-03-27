@@ -125,8 +125,8 @@ form.addEventListener("submit", async function(event) {
     let treningsøkt = {
         "brukernavn":"nikolai",
         "dato":dato,
-        "start":"start",
-        "slutt":"slutt",
+        "start":null,
+        "slutt":null,
         "ovelser": økter
     }
 
