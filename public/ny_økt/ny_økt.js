@@ -71,8 +71,8 @@ function leggTilSett(container) {
         <div class="sett-inputs">
             <input type="number" name="reps" value="6" min="1" placeholder="Reps">
             <input type="number" name="vekt" value="" min="0" placeholder="Vekt (kg)">
+            <button type="button" class="slett-sett">Slett</button>
         </div>
-        <button type="button" class="slett-sett">Slett</button>
     `
     container.appendChild(settDiv)
 

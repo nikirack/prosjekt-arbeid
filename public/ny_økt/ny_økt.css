@@ -1,174 +1,133 @@
 .øvelse {
-    border: var(--border-width) solid var(--text-primary);
-    padding: var(--space-md);
-    margin-bottom: var(--space-md);
-    background: var(--bg-primary);
+    border: 2px solid #000;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #fff;
 }
 
-.øvelse::before {
-    position: absolute;
-    top: -12px;
-    left: var(--space-sm);
-    background: var(--bg-primary);
-    padding: 0 var(--space-xs);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+.øvelse h2 {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
     font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-}
-
-.sett-container {
-    display: grid;
-    gap: var(--space-sm);
-    margin-top: var(--space-md);
-    padding-top: var(--space-md);
-    border-top: var(--border-thin) dashed var(--text-secondary);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 .øvelse-input-row {
     display: flex;
-    gap: var(--space-sm);
-    align-items: center;
-    margin-bottom: var(--space-sm);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .øvelse-input-row input {
     flex: 1;
-    margin-bottom: 0;
+    min-width: 150px;
 }
 
-.øvelse-input-row .slett-øvelse {
+.øvelse-input-row button {
     flex-shrink: 0;
+}
+
+.sett-container {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px dashed #000;
 }
 
 .sett {
     display: grid;
     grid-template-columns: 1fr 1fr auto;
-    gap: var(--space-sm);
-    align-items: stretch;
-    padding: var(--space-sm);
-    background: var(--bg-secondary);
-    border: var(--border-thin) solid var(--text-primary);
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: #f5f5f5;
+    border: 1px solid #000;
 }
 
 .sett h4 {
     grid-column: 1 / -1;
-    font-size: 0.8rem;
-    margin-bottom: var(--space-xs);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
 }
 
 .sett-inputs {
-    display: flex;
-    gap: var(--space-sm);
+    display: contents;
 }
 
 .sett-inputs input {
-    margin-bottom: 0;
-}
-
-.sett .slett-sett {
-    align-self: center;
-    margin-bottom: 0;
-}
-
-.sett input {
-    margin-bottom: 0;
-}
-
-.slett-øvelse,
-.slett-sett {
-    background: transparent;
-    border: var(--border-thin) solid var(--text-primary);
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    padding: 10px 12px;
-    cursor: pointer;
-    transition: all 0.1s ease;
-    height: auto;
-    white-space: nowrap;
-    width: min-content;
-}
-
-.slett-øvelse:hover,
-.slett-sett:hover {
-    background: var(--text-primary);
-    color: var(--bg-primary);
-}
-
-.legg-til-sett {
-    background: transparent;
-    border: var(--border-thin) dashed var(--text-secondary);
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    padding: var(--space-xs) var(--space-sm);
-    cursor: pointer;
-    transition: all 0.1s ease;
-    margin-top: var(--space-sm);
     width: 100%;
+    box-sizing: border-box;
 }
 
-.legg-til-sett:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    border-style: solid;
+.sett-inputs button {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+input, button { 
+    padding: 0.75rem 1rem;
+    border: 2px solid #000;
+    background-color: #fff;
+    color: #000;
+    font-family: var(--font);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: #000;
+    color: #fff;
 }
 
 .form-group {
-    margin-bottom: var(--space-md);
+    margin-bottom: 1.5rem;
 }
 
-#dato {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    text-transform: uppercase;
-    padding: var(--space-sm) var(--space-md);
-    border-width: var(--border-width);
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
     width: 100%;
 }
 
 #ny_øvelse {
     width: 100%;
-    margin-bottom: var(--space-md);
+    margin-bottom: 1rem;
 }
 
 #submit {
     width: 100%;
-    margin-top: var(--space-md);
-    font-size: 1rem;
-    padding: var(--space-md);
-    background: var(--accent);
-    border-color: var(--accent-light);
-    color: var(--bg-primary);
 }
 
-#submit:hover {
-    box-shadow: 4px 4px 0 var(--text-primary);
-    background: var(--accent);
+.legg-til-sett {
+    margin-top: 0.5rem;
 }
 
-#øvelser h2 {
-    margin-bottom: var(--space-md);
-}
-
-form .divider:first-of-type {
-    margin-top: 0;
-}
-
-form > .divider {
-    margin-top: var(--space-md);
-}
-
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .sett {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .sett h4 {
-        grid-column: 1;
+        grid-column: 1 / -1;
+    }
+
+    .sett-inputs button {
+        grid-column: 2;
+        grid-row: 2;
     }
 }

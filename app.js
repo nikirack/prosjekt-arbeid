@@ -6,15 +6,27 @@ const PORT = 3000;
 const Database = require("better-sqlite3");
 const db = new Database("database.db");
 
+// Det er ikke trykt å lagre passord i databasen, så vi må hashe passordet
+const crypto = require("crypto");
+
+function hashPassword(password) {
+  return crypto
+    .createHash("sha256")
+    .update(password)
+    .digest("hex");
+}
+
 const cors = require("cors");
 app.use(cors());
 
+// Route for å få ut alle øvelsene 
 app.get("/api/ovelser", (req, res) => {
     const rows = db.prepare("SELECT id, navn FROM ovelse").all();
     res.json(rows);
 });
 
-app.get("/api/:brukernavn/antal_okter", (req, res) => {
+// En route for å få antall
+app.get("/api/:brukernavn/antall_okter", (req, res) => {
     const { brukernavn } = req.params;
 
     const bruker = db.prepare("SELECT id FROM bruker WHERE brukernavn = ?").get(brukernavn);
@@ -26,6 +38,7 @@ app.get("/api/:brukernavn/antal_okter", (req, res) => {
     res.json(rows);
 });
 
+// En route for å få de siste øktene for en person
 app.get("/api/:brukernavn/okter/:antall", (req, res) => {
     const { brukernavn, antall } = req.params;
 
@@ -64,6 +77,7 @@ app.get("/api/:brukernavn/okter/:antall", (req, res) => {
     }
 });
 
+// En route for å registrere nye økter
 app.post("/api/registrer_okt", express.json(), (req, res) => {
     const { brukernavn, dato, start, slutt, ovelser } = req.body;
     if (!brukernavn || !dato || !Array.isArray(ovelser)) { // || !start || !slutt
@@ -92,6 +106,28 @@ app.post("/api/registrer_okt", express.json(), (req, res) => {
     }
 });
 
+// En route for å lage en ny bruker
+app.post("/api/auth/registrer", express.json(), (req, res) => {
+    const { navn, brukernavn, passord } = req.body
+    if ( !navn || !brukernavn || !passord ){
+        return res.status(400).json({ error: "Manglende eller ugyldig data" });
+    }
+
+    const hashedPassword = hashPassword(passord)
+
+    try {
+        db.prepare("INSERT INTO bruker (brukernavn, navn, passord) VALUES (?,?,?)").run(brukernavn, navn, hashedPassword);
+        res.status(201).json({ message: "Bruker laget!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Noe gikk galt ved laging av bruker." });
+    }
+})
+
+// WIP route for å logge in
+app.post("/api/auth/login", express.json(), (req, res) => {
+    
+})
 
 app.use(express.static("public"));
 
