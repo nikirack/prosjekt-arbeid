@@ -10,10 +10,28 @@ const db = new Database("database.db");
 const crypto = require("crypto");
 
 function hashPassword(password) {
-  return crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
+    return crypto
+        .createHash("sha256")
+        .update(password)
+        .digest("hex");
+}
+
+function getSession(req) {
+    const cookie = req.headers.cookie;
+    if (!cookie) return null;
+
+    const match = cookie.match(/sessionId=([^;]+)/);
+    return match ? match[1] : null;
+}
+
+function newSession(bruker) {
+    const sessionId = crypto.randomBytes(32).toString("hex");
+    db.prepare("INSERT INTO session (session, bruker) VALUES (?, ?)").run(sessionId, bruker.id);
+    return sessionId;
+}
+
+function removeSession(bruker) {
+    db.prepare("DELETE FROM session WHERE bruker = ?").run(bruker.id);
 }
 
 const cors = require("cors");
@@ -48,10 +66,10 @@ app.get("/api/:brukernavn/okter/:antall", (req, res) => {
             return res.status(404).json({ error: "Bruker ikke funnet" });
         }
 
-        const okter = db.prepare("SELECT * FROM treningsokt WHERE bruker_id = ? ORDER BY dato DESC LIMIT ?").all(bruker.id, antall)
+        const okter = db.prepare("SELECT * FROM treningsokt WHERE bruker_id = ? ORDER BY dato DESC LIMIT ?").all(bruker.id, antall);
         // console.log(okter)
 
-        for(const okt of okter) {
+        for (const okt of okter) {
             const ovelser = db.prepare(`
                 SELECT ovelse_per_okt.id, Ovelse.navn
                 FROM ovelse_per_okt
@@ -59,17 +77,17 @@ app.get("/api/:brukernavn/okter/:antall", (req, res) => {
                 WHERE Ovelse_per_okt.treningsokt_id = ?
                 ORDER BY ovelse_per_okt.rekkefolge
             `).all(okt.id);
-            
-            okt.ovelse = ovelser
+
+            okt.ovelse = ovelser;
             // console.log(ovelser)
 
-            for(const ovelse of ovelser) {
-                const sett = db.prepare("SELECT reps,vekt FROM sett WHERE ovelseokt_id = ? ORDER BY sett_nr").all(ovelse.id)
+            for (const ovelse of ovelser) {
+                const sett = db.prepare("SELECT reps,vekt FROM sett WHERE ovelseokt_id = ? ORDER BY sett_nr").all(ovelse.id);
                 // console.log(sett)
-                ovelse.sett = sett
+                ovelse.sett = sett;
             }
         }
-        res.json(okter)
+        res.json(okter);
 
     } catch (err) {
         console.error(err);
@@ -86,13 +104,13 @@ app.post("/api/registrer_okt", express.json(), (req, res) => {
 
     try {
         const bruker = db.prepare("SELECT * FROM bruker WHERE brukernavn = ?").get(brukernavn);
-        const okt = db.prepare("INSERT INTO treningsokt (bruker_id, dato, start, slutt) VALUES (?, ?, ?, ?)").run(bruker.id, dato,start,slutt)
+        const okt = db.prepare("INSERT INTO treningsokt (bruker_id, dato, start, slutt) VALUES (?, ?, ?, ?)").run(bruker.id, dato, start, slutt);
 
         for (let i = 0; i < ovelser.length; i++) {
             const ovelseData = ovelser[i];
-            
-            const ovelse = db.prepare("SELECT id FROM ovelse WHERE navn = ?").get(ovelseData.navn)
-            const ovelsePerOkt = db.prepare("INSERT INTO ovelse_per_okt (treningsokt_id, ovelse_id, rekkefolge) VALUES (?, ?, ?)").run(okt.lastInsertRowid, ovelse.id, i + 1)
+
+            const ovelse = db.prepare("SELECT id FROM ovelse WHERE navn = ?").get(ovelseData.navn);
+            const ovelsePerOkt = db.prepare("INSERT INTO ovelse_per_okt (treningsokt_id, ovelse_id, rekkefolge) VALUES (?, ?, ?)").run(okt.lastInsertRowid, ovelse.id, i + 1);
 
             for (let j = 0; j < ovelseData.sett.length; j++) {
                 const settData = ovelseData.sett[j];
@@ -108,12 +126,12 @@ app.post("/api/registrer_okt", express.json(), (req, res) => {
 
 // En route for å lage en ny bruker
 app.post("/api/auth/registrer", express.json(), (req, res) => {
-    const { navn, brukernavn, passord } = req.body
-    if ( !navn || !brukernavn || !passord ){
+    const { navn, brukernavn, passord } = req.body;
+    if (!navn || !brukernavn || !passord) {
         return res.status(400).json({ error: "Manglende eller ugyldig data" });
     }
 
-    const hashedPassword = hashPassword(passord)
+    const hashedPassword = hashPassword(passord);
 
     try {
         db.prepare("INSERT INTO bruker (brukernavn, navn, passord) VALUES (?,?,?)").run(brukernavn, navn, hashedPassword);
@@ -122,12 +140,31 @@ app.post("/api/auth/registrer", express.json(), (req, res) => {
         console.error(err);
         res.status(500).json({ error: "Noe gikk galt ved laging av bruker." });
     }
-})
+});
 
-// WIP route for å logge in
-app.post("/api/auth/login", express.json(), (req, res) => {
-    
-})
+app.post("/api/auth/loggin", express.json(), (req, res) => {
+    const { brukernavn, passord } = req.body;
+
+    try {
+        const bruker = db.prepare("SELECT * FROM bruker WHERE brukernavn = ?").get(brukernavn);
+        if (!bruker) {
+            return res.status(404).json({ error: "Bruker ikke funnet" });
+        }
+
+        if (hashPassword(passord) !== bruker.passord) {
+            return res.status(404).json({ error: "Feil brukernavn eller passord" });
+        }
+
+        const sessionId = newSession(bruker);
+        res.cookie("sessionId", sessionId, { httpOnly: true, sameSite: "Strict" });
+
+        return res.status(201).json({ message: `Innlogget som ${bruker.brukernavn}` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Noe gikk galt innloging." });
+    }
+
+});
 
 app.use(express.static("public"));
 

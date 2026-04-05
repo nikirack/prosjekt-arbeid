@@ -1,7 +1,5 @@
 const form = document.querySelector("#ny_bruker_form")
 
-
-
 form.addEventListener("submit", async function(event) {
     event.preventDefault()
 
