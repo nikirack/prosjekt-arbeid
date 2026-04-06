@@ -2,8 +2,6 @@ const form = document.querySelector("#økt")
 const ny_øvelse_knapp = document.querySelector("#ny_øvelse")
 const øvelser_div = document.querySelector("#øvelser")
 
-const brukernavn = "nikolai"
-
 document.querySelector("#dato").valueAsDate = new Date();
 
 let alleØvelser = []
@@ -121,15 +119,14 @@ form.addEventListener("submit", async function(event) {
     const økter = Array.from(øvelser_div.querySelectorAll(".øvelse")).map(div => {
         const navn = div.querySelector(".øvelse-input").value
         const settData = Array.from(div.querySelectorAll(".sett")).map(settDiv => {
-            const reps = settDiv.querySelector("input[name='reps']").value
-            const vekt = settDiv.querySelector("input[name='vekt']").value
+            const reps = settDiv.querySelector('input[name="reps"]').value
+            const vekt = settDiv.querySelector('input[name="vekt"]').value
             return { reps, vekt }
         })
         return { navn, sett: settData }
     })
     
     let treningsøkt = {
-        "brukernavn":brukernavn,
         "dato":dato,
         "start":null,
         "slutt":null,
@@ -138,17 +135,24 @@ form.addEventListener("submit", async function(event) {
 
     console.log("Treningsøkt:", treningsøkt)
 
-    const response = await fetch('/api/registrer_okt', {
-        method: 'POST',
+    const response = await fetch("/api/registrer_okt", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(treningsøkt)
     });
 
     if (response.ok) {
-        alert('Treningsøkten er registrert!');
+        alert("Treningsøkten er registrert!");
+        window.location.href = "/";
     } else {
-        alert('Det skjedde en feil ved registrering av treningsøkten.');
+        alert("Det skjedde en feil ved registrering av treningsøkten.");
     }
 })
+
+document.getElementById("logout-btn").addEventListener("click", async (event) => {
+    event.preventDefault();
+    await fetch("/api/auth/loggut");
+    window.location.href = "/auth/loggin";
+});

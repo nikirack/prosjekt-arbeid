@@ -8,21 +8,20 @@ form.addEventListener("submit", async function(event) {
 
     const credentials = { brukernavn, passord }
 
-    const response = await fetch('/api/auth/loggin', {
-        method: 'POST',
+    const response = await fetch("/api/auth/loggin", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
-        credentials: 'same-origin',
         body: JSON.stringify(credentials)
     });
 
     if (response.ok) {
-        window.location.href = '/'
+        window.location.href = "/"
     } else {
         const errorData = await response.json().catch(() => null)
         console.log(errorData)
-        const message = errorData?.error || 'Feil ved innlogging. Sjekk brukernavn og passord.'
+        const message = errorData?.error || "Feil ved innlogging. Sjekk brukernavn og passord."
         alert(message)
     }
 })

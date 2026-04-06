@@ -11,18 +11,18 @@ form.addEventListener("submit", async function(event) {
     
     const bruker = { navn, brukernavn, passord }
 
-    const response = await fetch('/api/auth/registrer', {
-        method: 'POST',
+    const response = await fetch("/api/auth/registrer", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(bruker)
     });
 
     if (response.ok) {
-        alert('Bruker registrert!');
+        alert("Bruker registrert!");
     } else {
-        alert('Det skjedde en feil ved registrering av brukerene.');
+        alert("Det skjedde en feil ved registrering av brukerene.");
     }
 
 })

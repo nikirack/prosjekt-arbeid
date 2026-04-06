@@ -34,6 +34,21 @@ function removeSession(bruker) {
     db.prepare("DELETE FROM session WHERE bruker = ?").run(bruker.id);
 }
 
+function getUserFromSession(req) {
+    const sessionId = getSession(req);
+
+    try {
+        const session = db.prepare("SELECT bruker FROM session WHERE session = ?").get(sessionId);
+        if (!session) return null;
+
+        const bruker = db.prepare("SELECT * FROM bruker WHERE id = ?").get(session.bruker);
+        return bruker || null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+}
+
 const cors = require("cors");
 app.use(cors());
 
@@ -44,26 +59,24 @@ app.get("/api/ovelser", (req, res) => {
 });
 
 // En route for å få antall
-app.get("/api/:brukernavn/antall_okter", (req, res) => {
-    const { brukernavn } = req.params;
-
-    const bruker = db.prepare("SELECT id FROM bruker WHERE brukernavn = ?").get(brukernavn);
+app.get("/api/antall_okter", (req, res) => {
+    const bruker = getUserFromSession(req);
     if (!bruker) {
-        return res.status(404).json({ error: "Bruker ikke funnet" });
+        return res.status(401).json({ error: "Ikke innlogget" });
     }
 
     const rows = db.prepare("SELECT COUNT(*) as antall_okter FROM treningsokt WHERE bruker_id = ?").get(bruker.id);
     res.json(rows);
 });
 
-// En route for å få de siste øktene for en person
-app.get("/api/:brukernavn/okter/:antall", (req, res) => {
-    const { brukernavn, antall } = req.params;
+// En route for å få de siste øktene dine
+app.get("/api/okter/:antall", (req, res) => {
+    const { antall } = req.params;
 
     try {
-        const bruker = db.prepare("SELECT id FROM bruker WHERE brukernavn = ?").get(brukernavn);
+        const bruker = getUserFromSession(req);
         if (!bruker) {
-            return res.status(404).json({ error: "Bruker ikke funnet" });
+            return res.status(401).json({ error: "Ikke innlogget" });
         }
 
         const okter = db.prepare("SELECT * FROM treningsokt WHERE bruker_id = ? ORDER BY dato DESC LIMIT ?").all(bruker.id, antall);
@@ -97,13 +110,16 @@ app.get("/api/:brukernavn/okter/:antall", (req, res) => {
 
 // En route for å registrere nye økter
 app.post("/api/registrer_okt", express.json(), (req, res) => {
-    const { brukernavn, dato, start, slutt, ovelser } = req.body;
-    if (!brukernavn || !dato || !Array.isArray(ovelser)) { // || !start || !slutt
+    const { dato, start, slutt, ovelser } = req.body;
+    if (!dato || !Array.isArray(ovelser)) { // || !start || !slutt
         return res.status(400).json({ error: "Manglende eller ugyldig data" });
     }
 
     try {
-        const bruker = db.prepare("SELECT * FROM bruker WHERE brukernavn = ?").get(brukernavn);
+        const bruker = getUserFromSession(req);
+        if (!bruker) {
+            return res.status(401).json({ error: "Ikke innlogget" });
+        }
         const okt = db.prepare("INSERT INTO treningsokt (bruker_id, dato, start, slutt) VALUES (?, ?, ?, ?)").run(bruker.id, dato, start, slutt);
 
         for (let i = 0; i < ovelser.length; i++) {
@@ -164,6 +180,28 @@ app.post("/api/auth/loggin", express.json(), (req, res) => {
         res.status(500).json({ error: "Noe gikk galt innloging." });
     }
 
+});
+
+app.get("/api/auth/loggut", (req, res) => {
+    const bruker = getUserFromSession(req);
+    if (!bruker) {
+        return res.status(401).json({ error: "Ikke innlogget" });
+    }
+    
+    try {
+        removeSession(bruker)
+        return res.status(201).json({ message: `Fjernet alle sessions for ${bruker.brukernavn}` });
+    } catch (err) {
+        res.status(500).json({ error: "Noe gikk galt ved ut-loggingen." });
+    }
+});
+
+app.get("/api/auth/loggedin", (req, res) => {
+    const bruker = getUserFromSession(req);
+    if (!bruker) {
+        return res.json(false);
+    }
+    res.json(true);
 });
 
 app.use(express.static("public"));

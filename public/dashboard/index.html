@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Treningslogg</title>
+    <script src="/auth-check.js"></script>
     <script src="dashboard.js" defer></script>
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="dashboard.css">
@@ -12,11 +13,12 @@
     <nav>
         <p>TRENINGSLOGG</p>
         <a href="/">[HJEM]</a>
+        <a href="#" id="logout-btn">[Logout]</a>
     </nav>
     <main>
         <header>
             <h1>Dashboard</h1>
-            <p>Tidligere økter for <strong>nikolai</strong></p>
+            <p>Tidligere økter</p>
         </header>
         <section id="status">Laster økter...</section>
         <div id="okt-grid" class="grid"></div>
