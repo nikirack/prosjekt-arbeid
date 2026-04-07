@@ -121,15 +121,15 @@ app.post("/api/registrer_okt", express.json(), (req, res) => {
             return res.status(401).json({ error: "Ikke innlogget" });
         }
         const okt = db.prepare("INSERT INTO treningsokt (bruker_id, dato, start, slutt) VALUES (?, ?, ?, ?)").run(bruker.id, dato, start, slutt);
-
+        // console.log(ovelser)
         for (let i = 0; i < ovelser.length; i++) {
             const ovelseData = ovelser[i];
-
+            // console.log(ovelseData)
             const ovelse = db.prepare("SELECT id FROM ovelse WHERE navn = ?").get(ovelseData.navn);
             const ovelsePerOkt = db.prepare("INSERT INTO ovelse_per_okt (treningsokt_id, ovelse_id, rekkefolge) VALUES (?, ?, ?)").run(okt.lastInsertRowid, ovelse.id, i + 1);
 
-            for (let j = 0; j < ovelseData.sett.length; j++) {
-                const settData = ovelseData.sett[j];
+            for (let j = 0; j < ovelseData.settArray.length; j++) {
+                const settData = ovelseData.settArray[j];
                 db.prepare("INSERT INTO Sett (ovelseokt_id, reps, vekt, sett_nr) VALUES (?, ?, ?, ?)").run(ovelsePerOkt.lastInsertRowid, settData.reps, settData.vekt, j + 1);
             }
         }

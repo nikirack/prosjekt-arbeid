@@ -104,13 +104,12 @@ button:hover {
     width: 100%;
 }
 
-#ny_øvelse {
+.btn-stor {
     width: 100%;
-    margin-bottom: 1rem;
 }
 
-#submit {
-    width: 100%;
+#ny_øvelse {
+    margin-bottom: 1rem;
 }
 
 .legg-til-sett {

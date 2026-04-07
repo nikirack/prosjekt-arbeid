@@ -13,7 +13,7 @@ async function øvelser() {
 
 øvelser()
 
-ny_øvelse_knapp.addEventListener("click", function(event) {
+ny_øvelse_knapp.addEventListener("click", (event) => {
     event.preventDefault()
     leggTilØvelse()
 })
@@ -32,11 +32,10 @@ function leggTilØvelse() {
             <button type="button" class="slett-øvelse">Slett</button>
         </div>
         <div class="sett-container"></div>
-        <button type="button" class="legg-til-sett">Legg til sett</button>
+        <button type="button" class="legg-til-sett btn-stor">Legg til sett</button>
     `
     øvelser_div.appendChild(div)
 
-    const input = div.querySelector(".øvelse-input")
     const datalist = div.querySelector("datalist")
     const settContainer = div.querySelector(".sett-container")
     const slettBtn = div.querySelector(".slett-øvelse")
@@ -52,7 +51,9 @@ function leggTilØvelse() {
         leggTilSett(settContainer)
     }
 
-    leggTilSettBtn.addEventListener("click", () => leggTilSett(settContainer))
+    leggTilSettBtn.addEventListener("click", () => {
+        leggTilSett(settContainer)
+    })
 
     slettBtn.addEventListener("click", () => {
         div.remove()
@@ -83,6 +84,7 @@ function leggTilSett(container) {
 
 function oppdaterØvelseNummer() {
     const øvelser = øvelser_div.querySelectorAll(".øvelse")
+    console.log(øvelser)
     øvelser.forEach((div, index) => {
         const h2 = div.querySelector("h2")
         h2.textContent = `Øvelse ${index + 1}`
@@ -101,39 +103,37 @@ form.addEventListener("submit", async function(event) {
     event.preventDefault()
 
     const dato = document.querySelector("#dato").value
-    console.log(dato)
+    // console.log(dato)
 
-
-
-    const øvelser = øvelser_div.querySelectorAll(".øvelse")
-    for (let div of øvelser) {
+    let økt = []
+    const øvelseDivs  = øvelser_div.querySelectorAll(".øvelse")
+    for (let div of øvelseDivs) {
         const navn = div.querySelector(".øvelse-input").value.trim()
-
+        // console.log(navn)
         const finnes = alleØvelser.some(øvelse => øvelse.navn === navn)
         if (!finnes) {
             alert(`"${navn}" finnes ikke i listen over gyldige øvelser!`)
             return
         }
-    }
 
-    const økter = Array.from(øvelser_div.querySelectorAll(".øvelse")).map(div => {
-        const navn = div.querySelector(".øvelse-input").value
-        const settData = Array.from(div.querySelectorAll(".sett")).map(settDiv => {
-            const reps = settDiv.querySelector('input[name="reps"]').value
-            const vekt = settDiv.querySelector('input[name="vekt"]').value
-            return { reps, vekt }
-        })
-        return { navn, sett: settData }
-    })
+        const settArray = []
+        const settDivs = div.querySelectorAll(".sett")
+        for(let sett of settDivs) {
+            const reps = sett.querySelector('input[name="reps"]').value
+            const vekt = sett.querySelector('input[name="vekt"]').value
+            settArray.push({ reps, vekt })
+        }
+        økt.push({ navn, settArray })
+    }
     
     let treningsøkt = {
         "dato":dato,
         "start":null,
         "slutt":null,
-        "ovelser": økter
+        "ovelser": økt
     }
 
-    console.log("Treningsøkt:", treningsøkt)
+    console.log(treningsøkt)
 
     const response = await fetch("/api/registrer_okt", {
         method: "POST",
