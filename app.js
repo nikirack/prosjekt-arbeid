@@ -58,28 +58,15 @@ app.get("/api/ovelser", (req, res) => {
     res.json(rows);
 });
 
-// En route for å få antall
-app.get("/api/antall_okter", (req, res) => {
-    const bruker = getUserFromSession(req);
-    if (!bruker) {
-        return res.status(401).json({ error: "Ikke innlogget" });
-    }
-
-    const rows = db.prepare("SELECT COUNT(*) as antall_okter FROM treningsokt WHERE bruker_id = ?").get(bruker.id);
-    res.json(rows);
-});
-
 // En route for å få de siste øktene dine
-app.get("/api/okter/:antall", (req, res) => {
-    const { antall } = req.params;
-
+app.get("/api/okter/", (req, res) => {
     try {
         const bruker = getUserFromSession(req);
         if (!bruker) {
             return res.status(401).json({ error: "Ikke innlogget" });
         }
 
-        const okter = db.prepare("SELECT * FROM treningsokt WHERE bruker_id = ? ORDER BY dato DESC LIMIT ?").all(bruker.id, antall);
+        const okter = db.prepare("SELECT * FROM treningsokt WHERE bruker_id = ? ORDER BY dato").all(bruker.id);
         // console.log(okter)
 
         for (const okt of okter) {
@@ -140,7 +127,7 @@ app.post("/api/registrer_okt", express.json(), (req, res) => {
     }
 });
 
-// En route for å lage en ny bruker
+// En route for å lage en ny bruker, bruker hashPassword for å hashe passordet før det lagres i databasen
 app.post("/api/auth/registrer", express.json(), (req, res) => {
     const { navn, brukernavn, passord } = req.body;
     if (!navn || !brukernavn || !passord) {
@@ -158,6 +145,7 @@ app.post("/api/auth/registrer", express.json(), (req, res) => {
     }
 });
 
+// Route for å logge inn, sjekker om brukernavn og passord stemmer, og lager en session hvis det er riktig
 app.post("/api/auth/loggin", express.json(), (req, res) => {
     const { brukernavn, passord } = req.body;
 
@@ -182,6 +170,7 @@ app.post("/api/auth/loggin", express.json(), (req, res) => {
 
 });
 
+// Route for å logge ut, sletter alle sessions for brukeren i databasen og fjerner cookie
 app.get("/api/auth/loggut", (req, res) => {
     const bruker = getUserFromSession(req);
     if (!bruker) {
@@ -196,6 +185,7 @@ app.get("/api/auth/loggut", (req, res) => {
     }
 });
 
+// Route for å sjekke om brukeren er logget inn, returnerer true eller false som blir brukt i public/auth-check.js
 app.get("/api/auth/loggedin", (req, res) => {
     const bruker = getUserFromSession(req);
     if (!bruker) {

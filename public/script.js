@@ -9,8 +9,3 @@ async function endre_total_økter() {
 
 endre_total_økter()
 
-document.getElementById("logout-btn").addEventListener("click", async (event) => {
-    event.preventDefault();
-    await fetch("/api/auth/loggut");
-    window.location.href = "/auth/loggin";
-});

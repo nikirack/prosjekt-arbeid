@@ -151,8 +151,3 @@ form.addEventListener("submit", async function (event) {
     }
 });
 
-document.getElementById("logout-btn").addEventListener("click", async (event) => {
-    event.preventDefault();
-    await fetch("/api/auth/loggut");
-    window.location.href = "/auth/loggin";
-});

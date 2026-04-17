@@ -1,12 +1,10 @@
-const antallOkter = 10;
-
 const statusHTML = document.getElementById("status");
 const gridHTML = document.getElementById("okt-grid");
 
 async function hentOkter() {
     try {
         statusHTML.textContent = "Henter økter...";
-        const res = await fetch(`/api/okter/${antallOkter}`);
+        const res = await fetch("/api/okter/");
 
         if (!res.ok) {
             console.log("Error ved henting av data");
@@ -64,8 +62,3 @@ async function hentOkter() {
 
 hentOkter();
 
-document.getElementById("logout-btn").addEventListener("click", async (event) => {
-    event.preventDefault();
-    await fetch("/api/auth/loggut");
-    window.location.href = "/auth/loggin";
-});

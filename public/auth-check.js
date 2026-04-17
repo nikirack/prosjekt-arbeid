@@ -13,3 +13,9 @@ async function checkAuth() {
 }
 
 checkAuth()
+
+document.getElementById("logout-btn").addEventListener("click", async (event) => {
+    event.preventDefault();
+    await fetch("/api/auth/loggut");
+    window.location.href = "/auth/loggin";
+});
