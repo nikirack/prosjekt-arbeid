@@ -21,7 +21,7 @@ form.addEventListener("submit", async function(event) {
     } else {
         const errorData = await response.json().catch(() => null)
         console.log(errorData)
-        const message = errorData?.error || "Feil ved innlogging. Sjekk brukernavn og passord."
+        const message = "Feil ved innlogging. Sjekk brukernavn og passord."
         alert(message)
     }
 })

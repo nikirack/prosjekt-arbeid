@@ -18,6 +18,7 @@ ny_øvelse_knapp.addEventListener("click", (event) => {
     leggTilØvelse();
 });
 
+// Funksjon som legger til et nytt øvelsesfelt i skjemaet
 function leggTilØvelse() {
     const count = øvelser_div.childElementCount;
     const div = document.createElement("div");
@@ -41,12 +42,14 @@ function leggTilØvelse() {
     const slettBtn = div.querySelector(".slett-øvelse");
     const leggTilSettBtn = div.querySelector(".legg-til-sett");
 
+    // Fyller datalist med alle tilgjengelige øvelser for autofullføring
     alleØvelser.forEach(øvelse => {
         const option = document.createElement("option");
         option.value = øvelse.navn;
         datalist.appendChild(option);
     });
 
+    // Legger til 3 sett som standard
     for (let i = 0; i < 3; i++) {
         leggTilSett(settContainer);
     }
@@ -61,6 +64,7 @@ function leggTilØvelse() {
     });
 }
 
+// Funksjon som legger til et nytt sett (reps og vekt) til en øvelse
 function leggTilSett(container) {
     const settNr = container.childElementCount + 1;
     const settDiv = document.createElement("div");
@@ -82,6 +86,7 @@ function leggTilSett(container) {
     });
 }
 
+// Oppdaterer øvelsenummeringen når en øvelse slettes
 function oppdaterØvelseNummer() {
     const øvelser = øvelser_div.querySelectorAll(".øvelse");
     console.log(øvelser);
@@ -91,6 +96,7 @@ function oppdaterØvelseNummer() {
     });
 }
 
+// Oppdaterer settnummeringen når et sett slettes
 function oppdaterSettNummer(container) {
     const sett = container.querySelectorAll(".sett");
     sett.forEach((div, index) => {
@@ -99,6 +105,7 @@ function oppdaterSettNummer(container) {
     });
 }
 
+// Håndterer innsending av treningsøkten
 form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -113,7 +120,7 @@ form.addEventListener("submit", async function (event) {
         const finnes = alleØvelser.some(øvelse => øvelse.navn === navn);
         if (!finnes) {
             alert(`"${navn}" finnes ikke i listen over gyldige øvelser!`);
-            return;
+            return; // Avbryter hvis øvelse ikke finnes
         }
 
         const settArray = [];
@@ -126,6 +133,7 @@ form.addEventListener("submit", async function (event) {
         økt.push({ navn, settArray });
     }
 
+    // Bygger objektet som skal sendes til serveren
     let treningsøkt = {
         "dato": dato,
         "start": null,
@@ -133,7 +141,7 @@ form.addEventListener("submit", async function (event) {
         "ovelser": økt
     };
 
-    console.log(treningsøkt);
+    console.log(treningsøkt); // Debug
 
     const response = await fetch("/api/registrer_okt", {
         method: "POST",
@@ -145,7 +153,7 @@ form.addEventListener("submit", async function (event) {
 
     if (response.ok) {
         alert("Treningsøkten er registrert!");
-        window.location.href = "/";
+        window.location.href = "/"; // Navigerer til hjemmesiden
     } else {
         alert("Det skjedde en feil ved registrering av treningsøkten.");
     }
